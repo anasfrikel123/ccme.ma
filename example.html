@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#007bff">
+    <meta name="msapplication-TileColor" content="#007bff">
+    <meta name="theme-color" content="#007bff">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulting Maghreb expertises offers professional services in financial, legal, and business domains.">
+
+    <title>Accueil - Consulting Maghreb expertise</title>
+    <style>
+        /* Header Styles */
+header {
+    background-color: var(--header-bg-color);
+    color: #000000d8;
+    padding: var(--padding-large) 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+header .logo h1 {
+    margin: 0;
+    font-size: 24px;
+    position: relative;
+    padding: 0px 0px;
+}
+
+header nav {
+    float: right;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul li {
+    position: relative;
+}
+
+header nav ul li a {
+    display: block;
+    padding: var(--padding-small) var(--padding-medium);
+    text-decoration: none;
+    color: #aa9292;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header nav ul li a:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Dropdown Menu */
+header nav ul .dropdown {
+    display: none;
+    position: absolute;
+    background-color: var(--header-bg-color);
+    top: 100%;
+    left: 0;
+    width: 200px;
+    list-style: none;
+    padding: var(--padding-small) 0;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+}
+
+header nav ul li:hover .dropdown {
+    display: block;
+    opacity: 1;
+}
+
+header nav ul .dropdown li a {
+    display: block;
+    padding: var(--padding-small) var(--padding-medium);
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+header nav ul .dropdown li a:hover {
+    background-color: var(--primary-color);
+}
+
+/* Menu Item Style for Comptabilité, Fiscalité, and Déclaration en ligne */
+header nav ul li.menu-item > a {
+    display: block;
+    padding: var(--padding-small) var(--padding-medium);
+    color: #ffffff;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover Effect on Menu Items (Comptabilité, Fiscalité, etc.) */
+header nav ul li.menu-item:hover > a {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Show sub-menu when hovering over the main menu items */
+header nav ul li.menu-item:hover > .dropdown {
+    display: block;
+}
+
+/* Sub-Dropdown Menu */
+header nav ul li .dropdown li .dropdown {
+    top: 0;
+    left: 100%;
+    display: none;
+}
+
+header nav ul li:hover .dropdown li:hover .dropdown {
+    display: block;
+}
+
+/* Smooth transition effect between nav items */
+header nav ul li a {
+    transition: background-color 0.3s, color 0.3s ease-in-out;
+}
+
+/* Hover Transition for Sub-Menu Items */
+header nav ul li:hover > a,
+header nav ul li .dropdown li a:hover {
+    background-color: var(--hover-color);
+    color: white;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Header with Navigation -->
+    <header>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#007bff">
+    <meta name="msapplication-TileColor" content="#007bff">
+    <meta name="theme-color" content="#007bff">
+       
+            <nav>
+                <ul>
+                    <li>
+                        <a href="services.html">Services</a>
+                        <ul class="dropdown">
+                            <li><a href="gestion-financiere.html">Gestion Financière</a></li>
+                            <li><a href="conseil-fiscalite.html">Conseil en Fiscalité</a></li>
+                            <li><a href="conseil-juridique.html">Conseil Juridique</a></li>
+                            <li><a href="domiciliation.html">Domiciliation</a></li>
+                            <li><a href="creation-entreprise.html">Création d'Entreprise</a></li>
+                            <li><a href="social-et-administratif.html">Social et Administratif</a></li>
+                            <li><a href="/business-plan.html">Business-plan</a></li>
+                            <li><a href="/gestion-financiere.html">Gestion Financière</a></li>
+                            <li><a href="/paie-et-grh.html">Paie et GRH</a></li>
+                            <li class="menu-item" id="comptable">
+                                <a href="#">Comptabilité</a>
+                                <ul class="dropdown">
+                                    <li><a href="supervision-comptable.html">Supervision Comptable</a></li>
+                                    <li><a href="tenue-comptabilite.html">Tenue Comptabilité</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item" id="fiscalite">
+                                <a href="#">Fiscalité</a>
+                                <ul class="dropdown">
+                                    <li><a href="assistance-fiscale-et-social.html">Assistance Fiscale</a></li>
+                                    <li><a href="controle-et-contentieux.html">Contrôle et Contentieux</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item" id="declaration-en-ligne">
+                                <a href="#">Déclaration en ligne</a>
+                                <ul class="dropdown">
+                                    <li><a href="damancom-cnss.html">Damancom CNSS</a></li>
+                                    <li><a href="simple-impots-DGI.html">Simpl Impôts DGI</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
