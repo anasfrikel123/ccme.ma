@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             body.classList.toggle('menu-open');
         });
 
+        navWrapper.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
         // Add dropdown toggles for mobile
         const dropdownItems = document.querySelectorAll('.has-dropdown');
         dropdownItems.forEach(item => {
@@ -80,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
+            if (!body.classList.contains('menu-open')) {
+                return;
+            }
             if (!navWrapper.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                 closeMenu();
             }
