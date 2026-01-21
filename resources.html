@@ -10,6 +10,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Accédez à des outils pratiques, guides et ressources pour la gestion d'entreprise, la fiscalité et la comptabilité au Maroc. Téléchargements, liens utiles et conseils professionnels.">
+    <link rel="canonical" href="https://www.ccme.ma/resources.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.ccme.ma/resources.html">
+    <meta property="og:title" content="Ressources et Outils pour Entreprises - Consulting Maghreb expertises">
+    <meta property="og:description" content="Accédez à des outils pratiques, guides et ressources pour la gestion d'entreprise, la fiscalité et la comptabilité au Maroc.">
+    <meta property="og:image" content="https://www.ccme.ma/images/header.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ressources et Outils pour Entreprises - Consulting Maghreb expertises">
+    <meta name="twitter:description" content="Accédez à des outils pratiques, guides et ressources pour la gestion d'entreprise, la fiscalité et la comptabilité au Maroc.">
+    <meta name="twitter:image" content="https://www.ccme.ma/images/header.png">
     <title>Ressources et Outils pour Entreprises - Consulting Maghreb expertises</title>
     
     <!-- Fonts -->
@@ -39,7 +49,9 @@
                 <li><a href="index.html">Accueil</a></li>
                     <li class="has-dropdown">
                     <a href="services.html">Services</a>
-                    <button class="dropdown-toggle" aria-label="Afficher les sous-services" tabindex="0"></button>
+                    <button class="dropdown-toggle" aria-label="Afficher les sous-services" aria-expanded="false" tabindex="0">
+                            <span class="dropdown-icon" aria-hidden="true">+</span>
+                        </button>
                         <div class="mega-menu">
                             <div class="mega-menu-grid">
                                 <div class="mega-menu-section">
@@ -222,26 +234,6 @@
                             <input type="number" id="loan-years" placeholder="Durée (années)">
                             <button onclick="calculateLoan()" class="btn btn-primary">Calculer</button>
                             <div id="loan-result" class="tool-result"></div>
-                        </div>
-                    </div>
-                    <!-- Currency Converter -->
-                    <div class="tool-card">
-                        <h3>Convertisseur de Devises</h3>
-                        <div class="tool-content">
-                            <input type="number" id="currency-amount" placeholder="Montant">
-                            <select id="currency-from">
-                                <option value="MAD">MAD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="USD">USD</option>
-                            </select>
-                            <span>→</span>
-                            <select id="currency-to">
-                                <option value="MAD">MAD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="USD">USD</option>
-                            </select>
-                            <button onclick="convertCurrency()" class="btn btn-primary">Convertir</button>
-                            <div id="currency-result" class="tool-result"></div>
                         </div>
                     </div>
                     <!-- Break-even Point Calculator -->
