@@ -70,7 +70,9 @@
                     <li><a href="index.html">Accueil</a></li>
                         <li class="has-dropdown">
                         <a href="services.html">Services</a>
-                        <button class="dropdown-toggle" aria-label="Afficher les sous-services" tabindex="0"></button>
+                        <button class="dropdown-toggle" aria-label="Afficher les sous-services" aria-expanded="false" tabindex="0">
+                            <span class="dropdown-icon" aria-hidden="true">+</span>
+                        </button>
                             <div class="mega-menu">
                                 <div class="mega-menu-grid">
                                     <div class="mega-menu-section">
@@ -130,29 +132,83 @@
             </nav>
         </div>
     </header>
-    <section class="hero">
-        <div class="container">
-            <h1>Gestion des risques au Maroc : Audit, contrôle & continuité</h1>
-            <p>Anticipez et maîtrisez vos risques avec un accompagnement sur mesure. <a href="blog.html" class="internal-link">Voir nos conseils</a></p>
-            <img src="images/gestion-risques.webp" alt="Gestion des risques au Maroc, audit et contrôle interne" width="900" height="400" loading="lazy">
+    <section class="service-hero">
+        <div class="service-hero-content">
+            <span class="feature-icon" style="margin-bottom:1.5rem;">
+                <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="currentColor" stroke-width="2">
+                    <rect x="8" y="8" width="32" height="32" rx="6" fill="#f8fafc" stroke="#2563eb"/>
+                    <path d="M16 30l6-6 6 6" stroke="#eab308" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M18 18h12" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <h1>Gestion des risques au Maroc : audit, contrôle et continuité</h1>
+            <p class="hero-subtitle">Identifiez vos risques, sécurisez vos opérations et assurez la continuité de votre activité grâce à un accompagnement structuré. <a href="blog.html" class="internal-link">Voir nos conseils</a></p>
+            <a href="contact.html" class="cta-button" aria-label="Demander un diagnostic des risques">Demander un diagnostic</a>
         </div>
     </section>
-    <section class="service-details">
+
+    <section class="service-intro">
+        <div class="container">
+            <h2>Anticiper les risques pour mieux piloter</h2>
+            <p>Nous accompagnons les entreprises marocaines dans la cartographie, l'évaluation et la maîtrise des risques financiers, opérationnels et réglementaires. Nos équipes mettent en place des dispositifs pragmatiques, adaptés à votre secteur.</p>
+        </div>
+    </section>
+
+    <section class="service-grid">
         <div class="container">
             <h2>Nos prestations en gestion des risques</h2>
-            <ul>
-                <li>Cartographie des risques</li>
-                <li>Mise en place de dispositifs de contrôle</li>
-                <li>Audit des procédures internes</li>
-                <li>Plan de continuité d'activité</li>
-            </ul>
-            <h2>Pourquoi choisir notre cabinet ?</h2>
-            <ul>
-                <li>Approche proactive et personnalisée</li>
-                <li>Expertise sectorielle</li>
-                <li>Confidentialité et rigueur</li>
-            </ul>
-            <a href="contact.html" class="btn btn-primary" aria-label="Contactez-nous pour la gestion des risques">Contactez-nous</a>
+            <div class="grid">
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="#2563eb" stroke-width="2">
+                            <rect x="8" y="8" width="32" height="32" rx="6" fill="#f8fafc" stroke="#2563eb"/>
+                            <path d="M16 24h16" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Cartographie des risques</h3>
+                    <ul>
+                        <li>Identification des risques majeurs</li>
+                        <li>Évaluation des impacts et priorités</li>
+                        <li>Plans d'actions adaptés</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="#22c55e" stroke-width="2">
+                            <rect x="8" y="8" width="32" height="32" rx="6" fill="#e7f9ef" stroke="#22c55e"/>
+                            <path d="M16 24l6 6 10-12" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Contrôle interne</h3>
+                    <ul>
+                        <li>Mise en place de procédures clés</li>
+                        <li>Audit des dispositifs existants</li>
+                        <li>Renforcement des contrôles</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon" aria-hidden="true">
+                        <svg width="48" height="48" fill="none" viewBox="0 0 48 48" stroke="#eab308" stroke-width="2">
+                            <rect x="8" y="8" width="32" height="32" rx="6" fill="#fffbe7" stroke="#eab308"/>
+                            <path d="M16 32l8-8 8 8" stroke="#eab308" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Continuité d'activité</h3>
+                    <ul>
+                        <li>Plans de continuité et scénarios</li>
+                        <li>Tests et simulations</li>
+                        <li>Accompagnement à la mise en œuvre</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Besoin de sécuriser votre organisation ?</h2>
+            <p>Nous vous aidons à réduire vos risques et à renforcer votre gouvernance.</p>
+            <a href="contact.html" class="cta-button" aria-label="Contactez-nous pour la gestion des risques">Contactez-nous</a>
         </div>
     </section>
     <section class="internal-links">

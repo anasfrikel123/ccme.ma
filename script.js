@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Functionality
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navWrapper = document.querySelector('.nav-wrapper');
-    const navMenu = document.querySelector('.nav-menu');
     const body = document.body;
 
     if (mobileMenuBtn && navWrapper) {
@@ -16,19 +15,26 @@ document.addEventListener('DOMContentLoaded', () => {
             body.classList.toggle('menu-open');
         });
 
+        navWrapper.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
         // Add dropdown toggles for mobile
         const dropdownItems = document.querySelectorAll('.has-dropdown');
         dropdownItems.forEach(item => {
-            // Use the existing button only
             const dropdownToggle = item.querySelector('.dropdown-toggle');
             if (!dropdownToggle) return;
 
-            // Remove ALL existing .dropdown-icon spans inside the button
-            dropdownToggle.querySelectorAll('.dropdown-icon').forEach(icon => icon.remove());
+            let icon = dropdownToggle.querySelector('.dropdown-icon');
+            if (!icon) {
+                icon = document.createElement('span');
+                icon.className = 'dropdown-icon';
+                icon.setAttribute('aria-hidden', 'true');
+                icon.textContent = '+';
+                dropdownToggle.appendChild(icon);
+            }
 
-           
-
-            const icon = dropdownToggle.querySelector('.dropdown-icon');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
 
             dropdownToggle.onclick = function(e) {
                 e.preventDefault();
@@ -42,8 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (otherMegaMenu) {
                             otherMegaMenu.style.display = 'none';
                         }
+                        const otherToggle = otherItem.querySelector('.dropdown-toggle');
                         const otherIcon = otherItem.querySelector('.dropdown-icon');
                         if (otherIcon) otherIcon.textContent = '+';
+                        if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
                     }
                 });
                 // Toggle current dropdown
@@ -53,9 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (wasActive) {
                         megaMenu.style.display = 'none';
                         icon.textContent = '+';
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
                     } else {
                         megaMenu.style.display = 'block';
                         icon.textContent = '×';
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
                     }
                 }
             };
@@ -74,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Close menu when clicking outside
         document.addEventListener('click', function(e) {
+            if (!body.classList.contains('menu-open')) {
+                return;
+            }
             if (!navWrapper.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                 closeMenu();
             }
@@ -87,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.mega-menu').forEach(menu => {
                     menu.style.display = '';
                 });
+                initializeDesktopDropdowns();
             }
         });
 
@@ -103,14 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (megaMenu) {
                     megaMenu.style.display = 'none';
                 }
+                const dropdownToggle = item.querySelector('.dropdown-toggle');
+                const icon = item.querySelector('.dropdown-icon');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+                if (icon) icon.textContent = '+';
             });
         };
     }
 
     // Desktop dropdown behavior
-    if (window.innerWidth > 768) {
+    const initializeDesktopDropdowns = () => {
         const dropdownItems = document.querySelectorAll('.has-dropdown');
         dropdownItems.forEach(item => {
+            if (item.dataset.hoverBound === 'true') return;
             let hideTimer;
             const megaMenu = item.querySelector('.mega-menu');
             if (!megaMenu) return;
@@ -136,8 +155,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     megaMenu.style.display = 'none';
                 }, 300);
             });
+
+            item.dataset.hoverBound = 'true';
         });
+    };
+
+    const desktopQuery = window.matchMedia('(min-width: 769px)');
+    if (desktopQuery.matches) {
+        initializeDesktopDropdowns();
     }
+    desktopQuery.addEventListener('change', (event) => {
+        if (event.matches) {
+            initializeDesktopDropdowns();
+        } else {
+            document.querySelectorAll('.mega-menu').forEach(menu => {
+                menu.style.display = '';
+            });
+        }
+    });
 
     // Contact form handling (Formspree AJAX pattern)
     const contactForm = document.getElementById("contact-form");
@@ -262,10 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
-});
-
-// Handle active state for navigation
-document.addEventListener('DOMContentLoaded', function() {
+    // Handle active state for navigation
     // Get current page URL
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
@@ -304,168 +336,252 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    // Event delegation for blog cards
+    const blogList = document.querySelector('.blog-list');
+    if (blogList) {
+        blogList.addEventListener('click', function(e) {
+            const card = e.target.closest('.blog-card');
+            if (card) {
+                const blogId = card.getAttribute('data-blog');
+                openBlogModal(blogId);
+                e.preventDefault();
+            }
+            // Also handle clicks on .btn-outline or h2 a
+            if (e.target.classList.contains('btn-outline') || (e.target.tagName === 'A' && e.target.closest('.blog-card'))) {
+                const cardLink = e.target.closest('.blog-card');
+                if (cardLink) {
+                    const blogId = cardLink.getAttribute('data-blog');
+                    openBlogModal(blogId);
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+    // Close modal on ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeBlogModal();
+    });
+    // Close modal on click outside content
+    const blogModal = document.getElementById('blog-modal');
+    if (blogModal) {
+        blogModal.addEventListener('click', function(e) {
+            if (e.target === this) closeBlogModal();
+        });
+    }
 });
+
+const setResultLines = (elementId, lines) => {
+    const container = document.getElementById(elementId);
+    if (!container) return;
+    container.textContent = '';
+    lines.forEach((line, index) => {
+        container.appendChild(document.createTextNode(line));
+        if (index < lines.length - 1) {
+            container.appendChild(document.createElement('br'));
+        }
+    });
+};
+
+const getInputValue = (id) => {
+    const element = document.getElementById(id);
+    if (!element) return null;
+    return element.value;
+};
+
+const getNumberValue = (id) => {
+    const rawValue = getInputValue(id);
+    if (rawValue === null) return null;
+    return parseFloat(rawValue) || 0;
+};
+
+const getIntValue = (id) => {
+    const rawValue = getInputValue(id);
+    if (rawValue === null) return null;
+    return parseInt(rawValue, 10) || 0;
+};
+
+const hasElements = (ids) => ids.every(id => document.getElementById(id));
 
 // Loan Repayment Calculator
 function calculateLoan() {
-    const amount = parseFloat(document.getElementById('loan-amount').value) || 0;
-    const rate = parseFloat(document.getElementById('loan-rate').value) / 100 / 12;
-    const years = parseFloat(document.getElementById('loan-years').value) || 0;
+    if (!hasElements(['loan-amount', 'loan-rate', 'loan-years', 'loan-result'])) return;
+    const amount = getNumberValue('loan-amount');
+    const rate = getNumberValue('loan-rate') / 100 / 12;
+    const years = getNumberValue('loan-years');
     const n = years * 12;
-    let result = '';
     if (amount > 0 && rate > 0 && n > 0) {
         const monthly = (amount * rate) / (1 - Math.pow(1 + rate, -n));
         const total = monthly * n;
-        result = `Mensualité: ${monthly.toFixed(2)} DH<br>Total remboursé: ${total.toFixed(2)} DH`;
+        setResultLines('loan-result', [
+            `Mensualité: ${monthly.toFixed(2)} DH`,
+            `Total remboursé: ${total.toFixed(2)} DH`
+        ]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('loan-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('loan-result').innerHTML = result;
-}
-
-// Currency Converter (placeholder rates)
-function convertCurrency() {
-    const amount = parseFloat(document.getElementById('currency-amount').value) || 0;
-    const from = document.getElementById('currency-from').value;
-    const to = document.getElementById('currency-to').value;
-    // Example rates (MAD: 1, EUR: 11, USD: 10)
-    const rates = { MAD: 1, EUR: 11, USD: 10 };
-    let result = '';
-    if (from && to && amount > 0) {
-        const madValue = amount * rates[from];
-        const converted = madValue / rates[to];
-        result = `${amount} ${from} = ${converted.toFixed(2)} ${to}`;
-    } else {
-        result = 'Veuillez remplir tous les champs.';
-    }
-    document.getElementById('currency-result').innerHTML = result;
 }
 
 // Break-even Point Calculator
 function calculateBreakEven() {
-    const fixed = parseFloat(document.getElementById('fixed-costs').value) || 0;
-    const price = parseFloat(document.getElementById('unit-price').value) || 0;
-    const cost = parseFloat(document.getElementById('unit-cost').value) || 0;
-    let result = '';
+    if (!hasElements(['fixed-costs', 'unit-price', 'unit-cost', 'breakeven-result'])) return;
+    const fixed = getNumberValue('fixed-costs');
+    const price = getNumberValue('unit-price');
+    const cost = getNumberValue('unit-cost');
     if (price > cost && fixed > 0) {
         const qty = fixed / (price - cost);
-        result = `Seuil de rentabilité: ${qty.toFixed(2)} unités`;
+        setResultLines('breakeven-result', [`Seuil de rentabilité: ${qty.toFixed(2)} unités`]);
     } else {
-        result = 'Veuillez remplir tous les champs correctement.';
+        setResultLines('breakeven-result', ['Veuillez remplir tous les champs correctement.']);
     }
-    document.getElementById('breakeven-result').innerHTML = result;
 }
 
 // Gross/Net Margin Calculator
 function calculateMargin() {
-    const revenue = parseFloat(document.getElementById('revenue').value) || 0;
-    const cogs = parseFloat(document.getElementById('cost-of-goods').value) || 0;
-    const expenses = parseFloat(document.getElementById('expenses').value) || 0;
-    let result = '';
+    if (!hasElements(['revenue', 'cost-of-goods', 'expenses', 'margin-result'])) return;
+    const revenue = getNumberValue('revenue');
+    const cogs = getNumberValue('cost-of-goods');
+    const expenses = getNumberValue('expenses');
     if (revenue > 0) {
         const gross = revenue - cogs;
         const grossMargin = (gross / revenue) * 100;
         const net = revenue - cogs - expenses;
         const netMargin = (net / revenue) * 100;
-        result = `Marge brute: ${grossMargin.toFixed(2)}%<br>Marge nette: ${netMargin.toFixed(2)}%`;
+        setResultLines('margin-result', [
+            `Marge brute: ${grossMargin.toFixed(2)}%`,
+            `Marge nette: ${netMargin.toFixed(2)}%`
+        ]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('margin-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('margin-result').innerHTML = result;
 }
 
 // Depreciation Calculator (Declining Balance)
 function calculateDepreciation() {
-    const value = parseFloat(document.getElementById('dep-asset-value').value) || 0;
-    const rate = parseFloat(document.getElementById('dep-rate').value) / 100 || 0;
-    const years = parseInt(document.getElementById('dep-years').value) || 0;
-    let result = '';
+    if (!hasElements(['dep-asset-value', 'dep-rate', 'dep-years', 'dep-result'])) return;
+    const value = getNumberValue('dep-asset-value');
+    const rate = getNumberValue('dep-rate') / 100;
+    const years = getIntValue('dep-years');
+    const resultContainer = document.getElementById('dep-result');
+    resultContainer.textContent = '';
     if (value > 0 && rate > 0 && years > 0) {
-        let depTable = '<table><tr><th>Année</th><th>Amortissement</th><th>Valeur résiduelle</th></tr>';
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+        ['Année', 'Amortissement', 'Valeur résiduelle'].forEach(text => {
+            const th = document.createElement('th');
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
         let bookValue = value;
         for (let i = 1; i <= years; i++) {
             const dep = bookValue * rate;
             bookValue -= dep;
-            depTable += `<tr><td>${i}</td><td>${dep.toFixed(2)}</td><td>${bookValue.toFixed(2)}</td></tr>`;
+            const row = document.createElement('tr');
+            [i, dep.toFixed(2), bookValue.toFixed(2)].forEach(text => {
+                const td = document.createElement('td');
+                td.textContent = text;
+                row.appendChild(td);
+            });
+            table.appendChild(row);
         }
-        depTable += '</table>';
-        result = depTable;
+        resultContainer.appendChild(table);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('dep-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('dep-result').innerHTML = result;
 }
 
 // Working Capital Calculator
 function calculateWorkingCapital() {
-    const assets = parseFloat(document.getElementById('current-assets').value) || 0;
-    const liabilities = parseFloat(document.getElementById('current-liabilities').value) || 0;
-    let result = '';
+    if (!hasElements(['current-assets', 'current-liabilities', 'wc-result'])) return;
+    const assets = getNumberValue('current-assets');
+    const liabilities = getNumberValue('current-liabilities');
     if (assets >= 0 && liabilities >= 0) {
         const wc = assets - liabilities;
-        result = `Fonds de roulement: ${wc.toFixed(2)} DH`;
+        setResultLines('wc-result', [`Fonds de roulement: ${wc.toFixed(2)} DH`]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('wc-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('wc-result').innerHTML = result;
 }
 
 // Quick Ratio & Current Ratio Calculator
 function calculateLiquidityRatios() {
-    const assets = parseFloat(document.getElementById('qr-assets').value) || 0;
-    const inventory = parseFloat(document.getElementById('qr-inventory').value) || 0;
-    const liabilities = parseFloat(document.getElementById('qr-liabilities').value) || 0;
-    let result = '';
+    if (!hasElements(['qr-assets', 'qr-inventory', 'qr-liabilities', 'liquidity-result'])) return;
+    const assets = getNumberValue('qr-assets');
+    const inventory = getNumberValue('qr-inventory');
+    const liabilities = getNumberValue('qr-liabilities');
     if (assets > 0 && liabilities > 0) {
         const currentRatio = assets / liabilities;
         const quickRatio = (assets - inventory) / liabilities;
-        result = `Current Ratio: ${currentRatio.toFixed(2)}<br>Quick Ratio: ${quickRatio.toFixed(2)}`;
+        setResultLines('liquidity-result', [
+            `Current Ratio: ${currentRatio.toFixed(2)}`,
+            `Quick Ratio: ${quickRatio.toFixed(2)}`
+        ]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('liquidity-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('liquidity-result').innerHTML = result;
 }
 
 // Simple Invoice Generator
 function generateInvoice() {
-    const client = document.getElementById('inv-client').value;
-    const desc = document.getElementById('inv-desc').value;
-    const amount = parseFloat(document.getElementById('inv-amount').value) || 0;
-    let result = '';
+    if (!hasElements(['inv-client', 'inv-desc', 'inv-amount', 'invoice-result'])) return;
+    const client = getInputValue('inv-client');
+    const desc = getInputValue('inv-desc');
+    const amount = getNumberValue('inv-amount');
+    const resultContainer = document.getElementById('invoice-result');
+    resultContainer.textContent = '';
     if (client && desc && amount > 0) {
-        result = `<div style='border:1px solid #ccc;padding:10px;'><strong>Facture</strong><br>Client: ${client}<br>Description: ${desc}<br>Montant: ${amount.toFixed(2)} DH</div>`;
+        const wrapper = document.createElement('div');
+        wrapper.style.border = '1px solid #ccc';
+        wrapper.style.padding = '10px';
+
+        const title = document.createElement('strong');
+        title.textContent = 'Facture';
+
+        const clientLine = document.createElement('div');
+        clientLine.textContent = `Client: ${client}`;
+
+        const descLine = document.createElement('div');
+        descLine.textContent = `Description: ${desc}`;
+
+        const amountLine = document.createElement('div');
+        amountLine.textContent = `Montant: ${amount.toFixed(2)} DH`;
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(document.createElement('br'));
+        wrapper.appendChild(clientLine);
+        wrapper.appendChild(descLine);
+        wrapper.appendChild(amountLine);
+        resultContainer.appendChild(wrapper);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        resultContainer.textContent = 'Veuillez remplir tous les champs.';
     }
-    document.getElementById('invoice-result').innerHTML = result;
 }
 
 // Expense Splitter
 function splitExpense() {
-    const amount = parseFloat(document.getElementById('split-amount').value) || 0;
-    const people = parseInt(document.getElementById('split-people').value) || 0;
-    let result = '';
+    if (!hasElements(['split-amount', 'split-people', 'split-result'])) return;
+    const amount = getNumberValue('split-amount');
+    const people = getIntValue('split-people');
     if (amount > 0 && people > 0) {
         const share = amount / people;
-        result = `Part par personne: ${share.toFixed(2)} DH`;
+        setResultLines('split-result', [`Part par personne: ${share.toFixed(2)} DH`]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('split-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('split-result').innerHTML = result;
 }
 
 // VAT Reverse Charge Calculator
 function calculateReverseVAT() {
-    const base = parseFloat(document.getElementById('vat-base').value) || 0;
-    const rate = parseFloat(document.getElementById('vat-rate').value) / 100 || 0;
-    let result = '';
+    if (!hasElements(['vat-base', 'vat-rate', 'reversevat-result'])) return;
+    const base = getNumberValue('vat-base');
+    const rate = getNumberValue('vat-rate') / 100;
     if (base > 0 && rate > 0) {
         const vat = base * rate;
-        result = `TVA à autoliquider: ${vat.toFixed(2)} DH`;
+        setResultLines('reversevat-result', [`TVA à autoliquider: ${vat.toFixed(2)} DH`]);
     } else {
-        result = 'Veuillez remplir tous les champs.';
+        setResultLines('reversevat-result', ['Veuillez remplir tous les champs.']);
     }
-    document.getElementById('reversevat-result').innerHTML = result;
 }
 
 // Blog Modal Logic
@@ -497,38 +613,3 @@ function closeBlogModal() {
     }, 300);
     document.body.style.overflow = '';
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Event delegation for blog cards
-    var blogList = document.querySelector('.blog-list');
-    if (blogList) {
-        blogList.addEventListener('click', function(e) {
-            let card = e.target.closest('.blog-card');
-            if (card) {
-                const blogId = card.getAttribute('data-blog');
-                openBlogModal(blogId);
-                e.preventDefault();
-            }
-            // Also handle clicks on .btn-outline or h2 a
-            if (e.target.classList.contains('btn-outline') || (e.target.tagName === 'A' && e.target.closest('.blog-card'))) {
-                const card = e.target.closest('.blog-card');
-                if (card) {
-                    const blogId = card.getAttribute('data-blog');
-                    openBlogModal(blogId);
-                    e.preventDefault();
-                }
-            }
-        });
-    }
-    // Close modal on ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeBlogModal();
-    });
-    // Close modal on click outside content
-    var blogModal = document.getElementById('blog-modal');
-    if (blogModal) {
-        blogModal.addEventListener('click', function(e) {
-            if (e.target === this) closeBlogModal();
-        });
-    }
-});
